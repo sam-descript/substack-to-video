@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.*)",
+      "Read(.*)",
+      "Write(.*)",
+      "Edit(.*)",
+      "Glob(.*)",
+      "Grep(.*)",
+      "mcp__Descript__import_media",
+      "mcp__Descript__prompt_project_agent",
+      "mcp__Descript__wait_for_job",
+      "mcp__Descript__publish_project",
+      "mcp__Descript__get_project",
+      "mcp__Descript__list_projects",
+      "mcp__Descript__list_jobs",
+      "mcp__Notion__notion-query-data-sources",
+      "mcp__Notion__notion-create-pages",
+      "mcp__Notion__notion-update-page",
+      "mcp__Notion__notion-fetch",
+      "mcp__Slack__slack_send_message"
+    ]
+  }
+}
