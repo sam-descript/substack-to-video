@@ -1,0 +1,44 @@
+name: Fetch New Substack Articles
+
+on:
+  schedule:
+    # Run daily at 7:30am Pacific (2:30pm UTC during PDT)
+    # 30 min before the Claude routine runs at 8am Pacific
+    - cron: '30 14 * * *'
+  workflow_dispatch: # Allow manual triggers for testing
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch new articles from Substack API
+        run: python3 scripts/fetch_new_articles.py
+
+      - name: Check for changes
+        id: check
+        run: |
+          if git diff --quiet pending-articles.json 2>/dev/null; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push if changed
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pending-articles.json
+          git commit -m "Update pending-articles.json with new Substack posts"
+          git push
